@@ -11,21 +11,21 @@ const PORT = process.env.PORT || 8080
 const schemaData = mongoose.Schema(
     {
         name: String,
-        email: String,
-        mobile: String,
-        address: String,
+        price: Number,
+        state: String,
+        stock: Number,
     },
     {
         timestamps: true,
     }
 )
 
-const userModel = mongoose.model('user', schemaData)
+const productModel = mongoose.model('product', schemaData)
 
 // Get all users
 // http://localhost:8080/
 app.get('/', async (req, res) => {
-    const data = await userModel.find({})
+    const data = await productModel.find({})
 
     res.json({ sucess: true, data: data })
 })
@@ -42,7 +42,7 @@ app.get('/', async (req, res) => {
  */
 app.post('/create', async (req, res) => {
     console.log(req.body)
-    const data = new userModel(req.body)
+    const data = new productModel(req.body)
     await data.save()
 
     res.send({ sucess: true, message: 'Data saved sucessfully', data: data })
@@ -60,7 +60,7 @@ app.post('/create', async (req, res) => {
  */
 app.put('/update', async (req, res) => {
     const { _id, ...rest } = req.body
-    const data = await userModel.updateOne({ _id: req.body._id }, rest)
+    const data = await productModel.updateOne({ _id: req.body._id }, rest)
 
     res.send({ sucess: true, message: 'Data updated sucessfully', data: data })
 })
@@ -71,7 +71,7 @@ app.delete('/delete/:id', async (req, res) => {
     const id = req.params.id
     console.log(id)
 
-    const data = await userModel.deleteOne({ _id: id })
+    const data = await productModel.deleteOne({ _id: id })
     res.send({ sucess: true, message: 'Data deleted sucessfully', data: data })
 })
 

@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 axios.defaults.baseURL = "http://localhost:8080/";
 
 export const App = () => {
-  const [users, setUsers] = useState([]);
+  const [products, setProducts] = useState([]);
   const [formData, setFormData] = useState({
     _id: "",
     name: "",
@@ -57,15 +57,15 @@ export const App = () => {
     }
   };
 
-  const handleUpdate = async (user) => {
+  const handleUpdate = async (product) => {
     setAction("update");
     setIsOpen(true);
     setFormData({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      mobile: user.mobile,
-      address: user.address,
+      _id: product._id,
+      name: product.name,
+      email: product.email,
+      mobile: product.mobile,
+      address: product.address,
     });
   };
 
@@ -93,7 +93,7 @@ export const App = () => {
   const fetchData = async () => {
     try {
       const res = await axios.get("/");
-      setUsers(res.data.data);
+      setProducts(res.data.data);
     } catch (error) {
       console.log(error);
     }
@@ -118,31 +118,31 @@ export const App = () => {
           <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th scope="col" className="px-6 py-3">
-                User Name
+                Tên Sản Phẩm
               </th>
               <th scope="col" className="px-6 py-3">
-                Email
+                Giá Tiền
               </th>
               <th scope="col" className="px-6 py-3">
-                Mobile
+                Trạng Thái
               </th>
               <th scope="col" className="px-6 py-3">
-                Adress
+                Số Lượng
               </th>
               <th scope="col" className="px-6 py-3">
-                <span className="sr-only">Edit</span>
-                <span className="sr-only">Delete</span>
+                <span className="sr-only">Sửa</span>
+                <span className="sr-only">Xóa</span>
               </th>
             </tr>
           </thead>
           <tbody>
-            {users[0] ? (
-              users.map((user) => (
+            {products[0] ? (
+              products.map((product) => (
                 <RowData
-                  key={user._id}
-                  user={user}
-                  deleteUser={() => handleDelete(user._id)}
-                  editUser={() => handleUpdate(user)}
+                  key={product._id}
+                  product={product}
+                  deleteProduct={() => handleDelete(product._id)}
+                  editProduct={() => handleUpdate(product)}
                 />
               ))
             ) : (
@@ -164,7 +164,7 @@ export const App = () => {
   );
 };
 
-function RowData({ user, deleteUser, editUser }) {
+function RowData({ product, deleteProduct, editProduct }) {
   return (
     <>
       <tr className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600">
@@ -172,23 +172,23 @@ function RowData({ user, deleteUser, editUser }) {
           scope="row"
           className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white"
         >
-          {user.name}
+          {product.name}
         </th>
-        <td className="px-6 py-4">{user.email}</td>
-        <td className="px-6 py-4">{user.mobile}</td>
-        <td className="px-6 py-4">{user.address}</td>
+        <td className="px-6 py-4">{product.price}</td>
+        <td className="px-6 py-4">{product.state}</td>
+        <td className="px-6 py-4">{product.stock}</td>
         <td className="space-x-4 px-6 py-4 text-right">
           <button
             href="#"
             className="font-medium text-blue-600 hover:underline dark:text-blue-500"
-            onClick={() => editUser(user._id)}
+            onClick={() => editProduct(product._id)}
           >
             Edit
           </button>
           <button
             href="#"
             className="font-medium text-blue-600 hover:underline dark:text-blue-500"
-            onClick={() => deleteUser()}
+            onClick={() => deleteProduct()}
           >
             Delete
           </button>
@@ -199,9 +199,9 @@ function RowData({ user, deleteUser, editUser }) {
 }
 
 RowData.propTypes = {
-  user: PropTypes.object,
-  deleteUser: PropTypes.func,
-  editUser: PropTypes.func,
+  product: PropTypes.object,
+  deleteProduct: PropTypes.func,
+  editProduct: PropTypes.func,
 };
 
 function Form({ close, submit, handleOnChange, data = {} }) {
@@ -217,69 +217,69 @@ function Form({ close, submit, handleOnChange, data = {} }) {
             htmlFor="name"
             className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
           >
-            UserName
+            Tên sản phẩm
           </label>
           <input
             type="name"
             id="name"
             name="name"
             className="dark:shadow-sm-light block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-            placeholder="Your Name"
+            placeholder="Product Name"
             value={data.name}
             required
           />
         </div>
         <div className="mb-5">
           <label
-            htmlFor="password"
+            htmlFor="price"
             className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
           >
-            Email
-          </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            className="dark:shadow-sm-light block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 
-            text-sm text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600
-             dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-            value={data.email}
-            required
-          />
-        </div>
-        <div className="mb-5">
-          <label
-            htmlFor="repeat-password"
-            className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-          >
-            Mobile
-          </label>
-          <input
-            type="tel"
-            id="mobile"
-            name="mobile"
-            className="dark:shadow-sm-light block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm
-             text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700
-              dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-            value={data.mobile}
-            required
-          />
-        </div>
-        <div className="mb-5">
-          <label
-            htmlFor="address"
-            className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-          >
-            Address
+            Giá tiền
           </label>
           <input
             type="text"
-            id="address"
-            name="address"
+            id="price"
+            name="price"
+            className="dark:shadow-sm-light block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 
+            text-sm text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600
+             dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+            value={data.price}
+            required
+          />
+        </div>
+        <div className="mb-5">
+          <label
+            htmlFor="state"
+            className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+          >
+            Trạng Thái
+          </label>
+          <input
+            type="text"
+            id="state"
+            name="state"
             className="dark:shadow-sm-light block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm
              text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700
               dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-            value={data.address}
+            value={data.state}
+            required
+          />
+        </div>
+        <div className="mb-5">
+          <label
+            htmlFor="stock"
+            className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+          >
+            Số Lượng
+          </label>
+          <input
+            type="number"
+            id="stock"
+            name="stock"
+            className="dark:shadow-sm-light block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm
+             text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700
+              dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+            value={data.stock}
             required
           />
         </div>
