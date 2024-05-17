@@ -7,20 +7,23 @@ axios.defaults.baseURL = "http://localhost:8080/";
 export const App = () => {
   const [users, setUsers] = useState([]);
   const [formData, setFormData] = useState({
+    _id: "",
     name: "",
     email: "",
     mobile: "",
     address: "",
   });
   const [isOpen, setIsOpen] = useState(false);
+  const [action, setAction] = useState("create");
 
-  const handleSubmit = async (e, type = "create") => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (type === "create") {
+    if (action === "create") {
       const data = await axios.post("/create", formData);
       if (data.data.sucess) {
         setIsOpen(false);
         setFormData({
+          _id: "",
           name: "",
           email: "",
           mobile: "",
@@ -29,11 +32,12 @@ export const App = () => {
         alert(data.data.message);
         fetchData();
       }
-    } else if (type === "update") {
-      const data = await axios.post("/update", formData);
+    } else if (action === "update") {
+      const data = await axios.put("/update", { ...formData });
       if (data.data.sucess) {
         setIsOpen(false);
         setFormData({
+          _id: "",
           name: "",
           email: "",
           mobile: "",
@@ -54,19 +58,26 @@ export const App = () => {
   };
 
   const handleUpdate = async (user) => {
+    setAction("update");
+    setIsOpen(true);
     setFormData({
+      _id: user._id,
       name: user.name,
       email: user.email,
       mobile: user.mobile,
       address: user.address,
     });
-    setIsOpen(true);
-
-    console.log(formData);
   };
 
-  const handleOpen = () => {
+  const handleCreate = () => {
+    setAction("create");
     setIsOpen(true);
+    setFormData({
+      name: "",
+      email: "",
+      mobile: "",
+      address: "",
+    });
   };
 
   const handleClose = () => {
@@ -99,7 +110,7 @@ export const App = () => {
           type="button"
           className="mb-4 me-2 rounded-lg bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-800
          dark:bg-blue-600 dark:hover:bg-blue-700"
-          onClick={handleOpen}
+          onClick={handleCreate}
         >
           Create
         </button>
@@ -128,7 +139,7 @@ export const App = () => {
             {users[0] ? (
               users.map((user) => (
                 <RowData
-                  key={user.id}
+                  key={user._id}
                   user={user}
                   deleteUser={() => handleDelete(user._id)}
                   editUser={() => handleUpdate(user)}
@@ -146,6 +157,7 @@ export const App = () => {
           close={handleClose}
           submit={handleSubmit}
           handleOnChange={handleOnChange}
+          data={formData}
         />
       )}
     </>
@@ -192,7 +204,7 @@ RowData.propTypes = {
   editUser: PropTypes.func,
 };
 
-function Form({ close, submit, handleOnChange, data }) {
+function Form({ close, submit, handleOnChange, data = {} }) {
   return (
     <div className="fixed left-0 top-0 flex h-screen w-screen items-center justify-center bg-[rgba(0,0,0,.5)]">
       <form
