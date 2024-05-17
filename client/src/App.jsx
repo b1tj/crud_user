@@ -25,9 +25,9 @@ export const App = () => {
         setFormData({
           _id: "",
           name: "",
-          email: "",
-          mobile: "",
-          address: "",
+          price: 0,
+          state: "",
+          stock: 0,
         });
         alert(data.data.message);
         fetchData();
@@ -39,9 +39,9 @@ export const App = () => {
         setFormData({
           _id: "",
           name: "",
-          email: "",
-          mobile: "",
-          address: "",
+          price: 0,
+          state: "",
+          stock: 0,
         });
         alert(data.data.message);
         fetchData();
@@ -63,9 +63,9 @@ export const App = () => {
     setFormData({
       _id: product._id,
       name: product.name,
-      email: product.email,
-      mobile: product.mobile,
-      address: product.address,
+      price: product.price,
+      state: product.state,
+      stock: product.stock,
     });
   };
 
@@ -74,9 +74,9 @@ export const App = () => {
     setIsOpen(true);
     setFormData({
       name: "",
-      email: "",
-      mobile: "",
-      address: "",
+      price: 0,
+      state: "",
+      stock: 0,
     });
   };
 
